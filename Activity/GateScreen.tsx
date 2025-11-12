@@ -4,18 +4,20 @@ import { useRef } from "react";
 import { Dimensions } from "react-native";
 import { cn } from "../util/twUtil";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { useNavigation } from "@react-navigation/native";
 
-export function GateActivitiy() {
+export function GateScreen() {
   const windowWidth = Dimensions.get("window").width;
   const windowHeight = Dimensions.get("window").height;
   const animation = useRef<LottieView>(null);
+  const navigation = useNavigation();
 
   async function goToPharmacistLoginActivity() {
-    console.log("hit parmacist login");
+    navigation.navigate("PharmacistAuth" as never);
   }
 
   async function goToPatientLoginActivity() {
-    console.log("hit patient login");
+    navigation.navigate("PatientAuth" as never);
   }
 
   return (
