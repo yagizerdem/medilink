@@ -1,21 +1,11 @@
-import { StyleSheet, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import "./global.css";
+import { GateActivitiy } from "./Activity/Gate";
 
 export default function App() {
   return (
-    <View className="flex-1 items-center justify-center bg-white">
-      <Text className="text-xl font-bold text-blue-200">
-        Welcome to Nativewind!
-      </Text>
-    </View>
+    <SafeAreaView className="flex-1 flex-col ">
+      <GateActivitiy />
+    </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
