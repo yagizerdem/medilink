@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import { app } from "../../firebaseConfig";
+import { FirebaseError } from "@firebase/util";
+import { isOperationalError } from "../../util/isOperationalError";
 
 enum PanelMode {
   LOGIN,
@@ -15,6 +19,8 @@ export function PharmacistAuthScreen() {
   const [lastName, setLastName] = useState("");
   const [mode, setMode] = useState<PanelMode>(PanelMode.LOGIN);
 
+  const auth = getAuth(app);
+
   function switchPanel(mode_: PanelMode) {
     setMode(mode_);
   }
@@ -25,6 +31,23 @@ export function PharmacistAuthScreen() {
     setFirstName("");
     setLastName("");
   }, [mode]);
+
+  async function Register() {
+    try {
+      const response = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+    } catch (error) {
+      if (error instanceof FirebaseError && isOperationalError(error)) {
+        const errorCode = error.code;
+        console.log("Operational error occurred:", errorCode, error.message);
+      } else {
+        console.log("An unexpected error occurred:", error);
+      }
+    }
+  }
 
   return (
     <View className="flex-1 justify-center items-center bg-teal-50 px-5">
@@ -165,7 +188,10 @@ export function PharmacistAuthScreen() {
           </View>
 
           {/* Register button */}
-          <TouchableOpacity className="bg-teal-700 py-3 rounded-lg flex-row justify-center items-center active:opacity-90">
+          <TouchableOpacity
+            className="bg-teal-700 py-3 rounded-lg flex-row justify-center items-center active:opacity-90"
+            onPressOut={() => Register()}
+          >
             <Ionicons name="person-add" color="white" size={18} />
             <Text className="text-white text-center font-semibold ml-2">
               Register
