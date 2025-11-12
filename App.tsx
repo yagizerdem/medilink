@@ -2,10 +2,18 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import "./global.css";
 import { createStaticNavigation } from "@react-navigation/native";
 import { RootStack } from "./navigator";
+import { BaseProvider } from "./Provider/BaseProvider";
 
-export default function App() {
+export default function AppWrapper() {
+  return (
+    <BaseProvider>
+      <App />
+    </BaseProvider>
+  );
+}
+
+function App() {
   const Navigation = createStaticNavigation(RootStack);
-
   return (
     <SafeAreaView className="flex-1 flex-col ">
       <Navigation />
