@@ -1,6 +1,6 @@
 import { FirebaseError } from "firebase/app";
 
-export function getFriendlyAuthMessage(error: any): string {
+export function getFriendlyAuthMessage(error: FirebaseError): string {
   if (!(error instanceof FirebaseError)) {
     return "An unexpected error occurred. Please try again.";
   }

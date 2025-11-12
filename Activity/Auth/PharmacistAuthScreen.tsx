@@ -1,10 +1,21 @@
 import { useEffect, useState } from "react";
 import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  signInWithCredential,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { app } from "../../firebaseConfig";
 import { FirebaseError } from "@firebase/util";
 import { isOperationalError } from "../../util/isOperationalError";
+import Toast from "react-native-toast-message";
+import { getFriendlyAuthMessage } from "../../util/getFriendlyMessage";
+import { useApp } from "../../Provider/AppProvider";
+import { getFirestore, doc, setDoc } from "firebase/firestore";
+import { UserType } from "../../enums/userType";
+import { useNavigation } from "@react-navigation/native";
 
 enum PanelMode {
   LOGIN,
@@ -12,12 +23,15 @@ enum PanelMode {
 }
 
 export function PharmacistAuthScreen() {
+  const { setIsLoading } = useApp();
+
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [mode, setMode] = useState<PanelMode>(PanelMode.LOGIN);
+  const navigation = useNavigation();
 
   const auth = getAuth(app);
 
@@ -34,18 +48,84 @@ export function PharmacistAuthScreen() {
 
   async function Register() {
     try {
+      const firstName_ = firstName.trim();
+      const lastName_ = lastName.trim();
+
+      if (firstName_.length < 2 || lastName_.length < 2) {
+        Toast.show({
+          type: "error",
+          text1:
+            "Please enter a valid first and last name  (at least 2 characters each).",
+        });
+        return;
+      }
+
+      setIsLoading(true);
       const response = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
+
+      const uid = response.user.uid;
+
+      const db = getFirestore(app);
+
+      await setDoc(doc(db, "profile", uid), {
+        firstName,
+        lastName,
+        email,
+        type: UserType.PHARMACIST,
+        createdAt: new Date(),
+      });
+
+      Toast.show({
+        type: "success",
+        text1: "Registration successful! You can now log in.",
+      });
+      switchPanel(PanelMode.LOGIN);
     } catch (error) {
       if (error instanceof FirebaseError && isOperationalError(error)) {
-        const errorCode = error.code;
-        console.log("Operational error occurred:", errorCode, error.message);
+        Toast.show({
+          type: "error",
+          text1: getFriendlyAuthMessage(error),
+        });
       } else {
-        console.log("An unexpected error occurred:", error);
+        Toast.show({
+          type: "error",
+          text1: "An unknown error occurred. Please try again.",
+        });
       }
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  async function Login() {
+    try {
+      setIsLoading(true);
+      const response = await signInWithEmailAndPassword(auth, email, password);
+
+      Toast.show({
+        type: "success",
+        text1: "Login successful!",
+      });
+
+      navigation.navigate("PharmacistDashboard" as never);
+    } catch (error) {
+      if (error instanceof FirebaseError && isOperationalError(error)) {
+        Toast.show({
+          type: "error",
+          text1: getFriendlyAuthMessage(error),
+        });
+      } else {
+        Toast.show({
+          type: "error",
+          text1: "An unknown error occurred. Please try again.",
+        });
+      }
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -99,7 +179,10 @@ export function PharmacistAuthScreen() {
           </View>
 
           {/* Login button */}
-          <TouchableOpacity className="bg-teal-700 py-3 rounded-lg flex-row justify-center items-center active:opacity-90">
+          <TouchableOpacity
+            className="bg-teal-700 py-3 rounded-lg flex-row justify-center items-center active:opacity-90"
+            onPressOut={() => Login()}
+          >
             <Ionicons name="log-in" color="white" size={18} />
             <Text className="text-white text-center font-semibold ml-2">
               Sign In

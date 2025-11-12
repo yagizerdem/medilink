@@ -1,4 +1,5 @@
 import React, { createContext, useContext, ReactNode } from "react";
+import { AppProvider } from "./AppProvider";
 
 type BaseContextValue = {};
 
@@ -11,7 +12,11 @@ type BaseProviderProps = {
 export const BaseProvider = ({ children }: BaseProviderProps) => {
   const value: BaseContextValue = {};
 
-  return <BaseContext.Provider value={value}>{children}</BaseContext.Provider>;
+  return (
+    <AppProvider>
+      <BaseContext.Provider value={value}>{children}</BaseContext.Provider>
+    </AppProvider>
+  );
 };
 
 export const useBase = () => {
