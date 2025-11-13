@@ -10,10 +10,12 @@ import { Patients as PharmacistPatients } from "./Activity/PharmacistArea/Activi
 import { Settings as PharmacistSettings } from "./Activity/PharmacistArea/Activity/Settings";
 import { Stock as PharmacistStock } from "./Activity/PharmacistArea/Activity/Stock";
 import { PharmacistLayout } from "./Activity/PharmacistArea/Layout/PharmasistLayout";
+import { DataManagement } from "./Activity/Common/DataManagement";
+import { About } from "./Activity/Common/About";
 
 export const PharmacistStack = createNativeStackNavigator({
   initialRouteName: "Dashboard",
-  screenOptions: { headerShown: true },
+  screenOptions: { headerShown: false },
   screens: {
     Dashboard: PharmacistDashboard,
     AddMedicine: PharmacistAddMedicine,
@@ -33,6 +35,8 @@ const RootStack = createNativeStackNavigator({
     Gate: GateScreen,
     PharmacistAuth: PharmacistAuthScreen,
     PatientAuth: PatientAuthScreen,
+    DataManagement: DataManagement,
+    About: About,
     PharmacistApp: {
       screen: PharmacistStack,
     },

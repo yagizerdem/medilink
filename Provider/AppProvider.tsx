@@ -15,11 +15,11 @@ import Toast from "react-native-toast-message";
 // Context shape
 type AppContextValue = {
   isLoading: boolean;
-  setIsLoading: (value: boolean) => void;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   profile: Profile | null;
   setProfile: (profile: Profile | null) => void;
   isLoggedIn: boolean;
-  setIsLoggedIn: (value: boolean) => void;
+  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 // Context
@@ -67,6 +67,9 @@ export const AppProvider = ({ children }: AppProviderProps): JSX.Element => {
           setProfile(null);
           setIsLoggedIn(false);
         }
+      } else {
+        setProfile(null);
+        setIsLoggedIn(false);
       }
     });
   }, []);

@@ -1,5 +1,6 @@
 import React, { createContext, useContext, ReactNode } from "react";
 import { AppProvider } from "./AppProvider";
+import { DataPermissionsProvider } from "./DataPermissionsProvider";
 
 type BaseContextValue = {};
 
@@ -14,7 +15,9 @@ export const BaseProvider = ({ children }: BaseProviderProps) => {
 
   return (
     <AppProvider>
-      <BaseContext.Provider value={value}>{children}</BaseContext.Provider>
+      <DataPermissionsProvider>
+        <BaseContext.Provider value={value}>{children}</BaseContext.Provider>
+      </DataPermissionsProvider>
     </AppProvider>
   );
 };

@@ -26,8 +26,8 @@ export function PharmacistAuthScreen() {
   const { setIsLoading } = useApp();
 
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("yagizerdem819@gmail.com");
+  const [password, setPassword] = useState("123456");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [mode, setMode] = useState<PanelMode>(PanelMode.LOGIN);
@@ -40,8 +40,8 @@ export function PharmacistAuthScreen() {
   }
 
   useEffect(() => {
-    setEmail("");
-    setPassword("");
+    setEmail("yagizerdem819@gmail.com");
+    setPassword("123456");
     setFirstName("");
     setLastName("");
   }, [mode]);
@@ -72,6 +72,7 @@ export function PharmacistAuthScreen() {
       const db = getFirestore(app);
 
       await setDoc(doc(db, "profile", uid), {
+        uid,
         firstName,
         lastName,
         email,
