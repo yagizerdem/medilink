@@ -11,12 +11,12 @@ export function About() {
       </View>
 
       {/* App Title */}
-      <Text className="text-3xl font-bold text-teal-700 mb-1">MediMate</Text>
+      <Text className="text-3xl font-bold text-teal-700 mb-1">Medilink</Text>
       <Text className="text-gray-500 mb-4">v1.0.0</Text>
 
       {/* Description */}
       <Text className="text-gray-700 leading-6 mb-6">
-        MediMate helps users manage their medications efficiently with a
+        Medilink helps users manage their medications efficiently with a
         comprehensive medication tracking and management assistant. The app
         simplifies medication use while ensuring a safe and organized treatment
         process.
@@ -48,7 +48,7 @@ export function About() {
 
       {/* Description */}
       <Text className="text-gray-700 leading-6 mb-6">
-        MediMate offers an intuitive interface and advanced technology to
+        Medilink offers an intuitive interface and advanced technology to
         simplify health management. It is designed for users of all ages and
         provides valuable support for your treatment process.
       </Text>
@@ -57,8 +57,8 @@ export function About() {
       <Text className="text-xl font-bold text-teal-700 mb-3">Contact Us:</Text>
 
       <View className="bg-white rounded-2xl p-4 shadow-md mb-10">
-        <Text className="text-gray-700 mb-2">Email: support@medimate.com</Text>
-        <Text className="text-gray-700">Web: www.medimate.com</Text>
+        <Text className="text-gray-700 mb-2">Email: support@medilink.com</Text>
+        <Text className="text-gray-700">Web: www.medilink.com</Text>
       </View>
     </ScrollView>
   );

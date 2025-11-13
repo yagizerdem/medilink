@@ -1,8 +1,5 @@
-import { ScrollView, View, TouchableOpacity } from "react-native";
+import { ScrollView, View } from "react-native";
 import { PharmacistLayoutFooter } from "../../../Components/PharmasistLayoutFooter";
-import { useNavigation } from "@react-navigation/native";
-import { useEffect, useRef } from "react";
-import { useApp } from "../../../Provider/AppProvider";
 
 interface PharmacistLayoutProps {
   children?: React.ReactNode;
