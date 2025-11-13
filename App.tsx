@@ -6,8 +6,7 @@ import { BaseProvider } from "./Provider/BaseProvider";
 import Toast from "react-native-toast-message";
 import { toastConfig } from "./util/toast";
 import { useApp } from "./Provider/AppProvider";
-import { View, Text, ActivityIndicator } from "react-native";
-import { Fragment } from "react";
+import { View, ActivityIndicator } from "react-native";
 
 export default function AppWrapper() {
   return (

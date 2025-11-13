@@ -3,7 +3,26 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { GateScreen } from "./Activity/GateScreen";
 import { PharmacistAuthScreen } from "./Activity/Auth/PharmacistAuthScreen";
 import { PatientAuthScreen } from "./Activity/Auth/PatientAuthScreen";
-import { Dashboard as PharmacistDashBoardScreen } from "./Activity/PharmacistArea/Dashboard";
+
+import { Dashboard as PharmacistDashboard } from "./Activity/PharmacistArea/Activity/Dashboard";
+import { AddMedicine as PharmacistAddMedicine } from "./Activity/PharmacistArea/Activity/AddMedicine";
+import { Patients as PharmacistPatients } from "./Activity/PharmacistArea/Activity/Patients";
+import { Settings as PharmacistSettings } from "./Activity/PharmacistArea/Activity/Settings";
+import { Stock as PharmacistStock } from "./Activity/PharmacistArea/Activity/Stock";
+import { PharmacistLayout } from "./Activity/PharmacistArea/Layout/PharmasistLayout";
+
+export const PharmacistStack = createNativeStackNavigator({
+  initialRouteName: "Dashboard",
+  screenOptions: { headerShown: true },
+  screens: {
+    Dashboard: PharmacistDashboard,
+    AddMedicine: PharmacistAddMedicine,
+    Patients: PharmacistPatients,
+    Settings: PharmacistSettings,
+    Stock: PharmacistStock,
+  },
+  layout: PharmacistLayout,
+});
 
 const RootStack = createNativeStackNavigator({
   initialRouteName: "Gate",
@@ -14,7 +33,9 @@ const RootStack = createNativeStackNavigator({
     Gate: GateScreen,
     PharmacistAuth: PharmacistAuthScreen,
     PatientAuth: PatientAuthScreen,
-    PharmacistDashboard: PharmacistDashBoardScreen,
+    PharmacistApp: {
+      screen: PharmacistStack,
+    },
   },
 });
 

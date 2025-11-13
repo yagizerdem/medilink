@@ -111,7 +111,7 @@ export function PharmacistAuthScreen() {
         text1: "Login successful!",
       });
 
-      navigation.navigate("PharmacistDashboard" as never);
+      navigation.navigate("PharmacistApp" as never);
     } catch (error) {
       if (error instanceof FirebaseError && isOperationalError(error)) {
         Toast.show({
