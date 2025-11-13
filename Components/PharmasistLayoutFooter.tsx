@@ -13,8 +13,6 @@ export function PharmacistLayoutFooter() {
 
   const current = getFocusedRouteNameFromRoute(route) || "Dashboard";
 
-  console.log(current);
-
   return (
     <View className="w-full h-20 bg-teal-900 flex-row justify-between items-center px-4">
       {/* Dashboard */}
