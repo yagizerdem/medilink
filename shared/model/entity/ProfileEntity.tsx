@@ -1,6 +1,6 @@
-import { UserType } from "../enums/userType";
+import { UserType } from "../../../enums/userType";
 
-export interface Profile {
+export interface ProfileEntity {
   uid: string;
   firstName: string;
   lastName: string;

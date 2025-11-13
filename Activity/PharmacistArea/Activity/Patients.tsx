@@ -11,7 +11,6 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { Gender } from "../../../enums/gender";
 import { generatePushID } from "../../../util/generatePushID";
-import { Patient } from "../../../model/Patient";
 import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
 import { app } from "../../../firebaseConfig";
 import { useApp } from "../../../Provider/AppProvider";
@@ -19,6 +18,7 @@ import Toast from "react-native-toast-message";
 import { getFriendlyAuthMessage } from "../../../util/getFriendlyMessage";
 import { isOperationalError } from "../../../util/isOperationalError";
 import { FirebaseError } from "firebase/app";
+import { CreatePatientDto } from "../../../shared/model/dto/CreatePatientDto";
 
 export function Patients() {
   const addClientSheetRef = useRef<BottomSheet>(null);
@@ -72,6 +72,7 @@ export function AddPatientForm() {
   const [email, setEmail] = useState("");
   const [gender, setGender] = useState<Gender | null>(null);
   const [age, setAge] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const { setIsLoading } = useApp();
 
   const handleSubmit = async () => {
@@ -84,21 +85,11 @@ export function AddPatientForm() {
         gender,
         age: Number(age),
         uid: generatePushID(),
-      } as Patient;
+        pharmacistUid: "",
+        phoneNumber,
+      } as CreatePatientDto;
 
-      const db = getFirestore(app);
-      const docRef = doc(db, "patients", email.toLowerCase());
-      const existing = await getDoc(docRef);
-
-      if (existing.exists()) {
-        Toast.show({
-          type: "error",
-          text1: "A patient with this email already exists.",
-        });
-        return;
-      }
-
-      await setDoc(doc(db, "patients", payload.uid), payload);
+      console.log(payload);
     } catch (error) {
       console.error("Error adding patient: ", error);
       if (error instanceof FirebaseError && isOperationalError(error)) {
@@ -153,6 +144,19 @@ export function AddPatientForm() {
           onChangeText={setEmail}
           placeholder="Enter email"
           keyboardType="email-address"
+          autoCapitalize="none"
+          className="bg-teal-50 rounded-lg px-3 py-2 text-base text-slate-800"
+        />
+      </View>
+
+      {/* Phone */}
+      <View className="mb-3">
+        <Text className="text-sm text-slate-500 mb-1">Phone</Text>
+        <TextInput
+          value={phoneNumber}
+          onChangeText={setPhoneNumber}
+          placeholder="Enter phone number"
+          keyboardType="phone-pad"
           autoCapitalize="none"
           className="bg-teal-50 rounded-lg px-3 py-2 text-base text-slate-800"
         />

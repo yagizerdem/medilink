@@ -12,7 +12,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { app } from "../../firebaseConfig";
-import { DataPermissions } from "../../model/DataPermissions";
+import { DataPermissionsEntity } from "../../shared/model/entity/DataPermissionsEntity";
 import Toast from "react-native-toast-message";
 import { useNavigation } from "@react-navigation/native";
 import { ConfirmDeleteModal } from "../../Components/ConfirmDeleteModal";
@@ -55,7 +55,7 @@ export function DataManagement() {
               allowAnonymousAnalytics:
                 dataPermissions?.allowAnonymousAnalytics ?? false,
               kvkkApproved: dataPermissions?.kvkkApproved ?? false,
-            } as DataPermissions,
+            } as DataPermissionsEntity,
             { merge: true }
           );
         }

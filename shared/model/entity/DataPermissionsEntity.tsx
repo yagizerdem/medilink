@@ -1,4 +1,4 @@
-export interface DataPermissions {
+export interface DataPermissionsEntity {
   kvkkApproved: boolean;
   allowAnonymousAnalytics: boolean;
 }
