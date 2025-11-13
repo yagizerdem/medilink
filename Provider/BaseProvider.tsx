@@ -2,6 +2,7 @@ import React, { createContext, useContext, ReactNode } from "react";
 import { AppProvider } from "./AppProvider";
 import { DataPermissionsProvider } from "./DataPermissionsProvider";
 import { PatientProvider } from "./PatientsContext";
+import { StockProvider } from "./StockProvider";
 
 type BaseContextValue = {};
 
@@ -18,7 +19,11 @@ export const BaseProvider = ({ children }: BaseProviderProps) => {
     <AppProvider>
       <DataPermissionsProvider>
         <PatientProvider>
-          <BaseContext.Provider value={value}>{children}</BaseContext.Provider>
+          <StockProvider>
+            <BaseContext.Provider value={value}>
+              {children}
+            </BaseContext.Provider>
+          </StockProvider>
         </PatientProvider>
       </DataPermissionsProvider>
     </AppProvider>

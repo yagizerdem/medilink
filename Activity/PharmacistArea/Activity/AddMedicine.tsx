@@ -1,9 +1,11 @@
 import React, { useCallback, useMemo, useRef } from "react";
-import { View, Text, StyleSheet, Insets } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { View, Text, StyleSheet, Insets, TouchableOpacity } from "react-native";
+import {
+  GestureHandlerRootView,
+  TextInput,
+} from "react-native-gesture-handler";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
-import { useSharedValue } from "react-native-reanimated";
-import { ContainerLayoutState } from "@gorhom/bottom-sheet/lib/typescript/types";
+import { Ionicons } from "@expo/vector-icons";
 
 export function AddMedicine() {
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -50,111 +52,26 @@ const styles = StyleSheet.create({
   },
 });
 
-function AddMedicineForm() {
+export function AddMedicineForm() {
   return (
-    <View
-      style={{
-        flex: 1,
-        marginHorizontal: 20,
-        backgroundColor: "white",
-        borderTopLeftRadius: 24,
-        borderTopRightRadius: 24,
-        padding: 20,
-        shadowColor: "#000",
-        shadowOpacity: 0.15,
-        shadowRadius: 10,
-      }}
-    >
-      {/* ===== Başlık ===== */}
-      <Text
-        style={{
-          fontSize: 22,
-          fontWeight: "700",
-          marginBottom: 20,
-          color: "#1f2937",
-        }}
-      >
-        İlaç Bilgisi Ekle
+    <View className="flex-1 bg-white rounded-t-3xl">
+      {/* Başlık */}
+      <Text className="text-2xl font-bold text-center  text-teal-800 mx-auto mb-5 w-full">
+        Add Medicine Information
       </Text>
 
-      {/* ===== Input: İlaç Adı ===== */}
-      <View
-        style={{
-          backgroundColor: "#E7F4F4",
-          borderRadius: 12,
-          paddingHorizontal: 14,
-          paddingVertical: 10,
-          marginBottom: 14,
-        }}
-      >
-        <Text style={{ fontSize: 14, color: "#6b7280", marginBottom: 4 }}>
-          İlaç Adı
-        </Text>
-        <Text style={{ fontSize: 16, color: "#111827" }}> </Text>
-      </View>
+      <View className="w-full bg-[#E7F4F4] rounded-full px-4 py-3 flex-row items-center mb-4">
+        <Ionicons name="grid-outline" size={22} color="#0f766e" />
 
-      {/* ===== Input: Hasta E-posta ===== */}
-      <View
-        style={{
-          backgroundColor: "#E7F4F4",
-          borderRadius: 12,
-          paddingHorizontal: 14,
-          paddingVertical: 10,
-          marginBottom: 14,
-        }}
-      >
-        <Text style={{ fontSize: 14, color: "#6b7280", marginBottom: 4 }}>
-          Hasta E-posta
-        </Text>
-        <Text style={{ fontSize: 16, color: "#111827" }}>fatma@gmail.com</Text>
-      </View>
+        <TextInput
+          placeholder="Barcode number"
+          placeholderTextColor="#6b7280"
+          className="flex-1 ml-3 text-base text-gray-800"
+        />
 
-      {/* ===== Tarihler ===== */}
-      <View
-        style={{
-          backgroundColor: "#E7F4F4",
-          borderRadius: 12,
-          paddingHorizontal: 14,
-          paddingVertical: 14,
-          marginBottom: 14,
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <Text style={{ fontSize: 16, color: "#111827" }}>Başlangıç Tarihi</Text>
-        <Text style={{ fontSize: 16, color: "#6b7280" }}>📅</Text>
-      </View>
-
-      <View
-        style={{
-          backgroundColor: "#E7F4F4",
-          borderRadius: 12,
-          paddingHorizontal: 14,
-          paddingVertical: 14,
-          marginBottom: 14,
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <Text style={{ fontSize: 16, color: "#111827" }}>Bitiş Tarihi</Text>
-        <Text style={{ fontSize: 16, color: "#6b7280" }}>📅</Text>
-      </View>
-
-      {/* ===== Dozaj ===== */}
-      <View
-        style={{
-          backgroundColor: "#E7F4F4",
-          borderRadius: 12,
-          paddingHorizontal: 14,
-          paddingVertical: 12,
-          marginBottom: 20,
-        }}
-      >
-        <Text style={{ fontSize: 16, color: "#111827" }}>
-          Dozaj (örnek: 1 tablet)
-        </Text>
+        <TouchableOpacity>
+          <Ionicons name="camera-outline" size={24} color="#0f766e" />
+        </TouchableOpacity>
       </View>
     </View>
   );
