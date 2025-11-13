@@ -1,13 +1,33 @@
-import { View, Text, ScrollView } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { useNavigation } from "@react-navigation/native";
 
 export function About() {
+  const navigation = useNavigation();
+
+  function goBack() {
+    //@ts-ignore
+    navigation.navigate("PharmacistApp" as never, { screen: "Settings" });
+  }
+
   return (
     <ScrollView className="flex-1 bg-teal-50 px-5 pt-6">
       {/* Header */}
-      <View className="flex-row items-center mb-6">
-        <Ionicons name="information-circle-outline" size={26} color="#0f766e" />
-        <Text className="text-2xl font-semibold text-teal-700 ml-2">About</Text>
+
+      <View className="flex flex-row items-center  h-12 ">
+        <TouchableOpacity className="w-12 " onPress={() => goBack()}>
+          <Ionicons name="arrow-back" size={24} color="#0f766e" />
+        </TouchableOpacity>
+        <View className="flex-row items-center">
+          <Ionicons
+            name="information-circle-outline"
+            size={26}
+            color="#0f766e"
+          />
+          <Text className="text-2xl font-semibold text-teal-700 ml-2">
+            About
+          </Text>
+        </View>
       </View>
 
       {/* App Title */}
