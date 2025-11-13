@@ -6,12 +6,21 @@ import {
   TextInput,
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { Gender } from "../../../enums/gender";
 import { generatePushID } from "../../../util/generatePushID";
-import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  getFirestore,
+  query,
+  setDoc,
+  where,
+} from "firebase/firestore";
 import { app } from "../../../firebaseConfig";
 import { useApp } from "../../../Provider/AppProvider";
 import Toast from "react-native-toast-message";
@@ -19,17 +28,76 @@ import { getFriendlyAuthMessage } from "../../../util/getFriendlyMessage";
 import { isOperationalError } from "../../../util/isOperationalError";
 import { FirebaseError } from "firebase/app";
 import { CreatePatientDto } from "../../../shared/model/dto/CreatePatientDto";
+import { getAuth } from "firebase/auth";
+import { validateEmail } from "../../../util/validateEmail";
+import { PatientEntity } from "../../../shared/model/entity/PatientEntity";
+import { PatientsList } from "../Components/PatientsList";
+import { usePatients } from "../../../Provider/PatientsContext";
 
 export function Patients() {
   const addClientSheetRef = useRef<BottomSheet>(null);
+  const { patients, setPatients } = usePatients();
+  const { setIsLoading } = useApp();
 
   const openAddClientSheet = () => addClientSheetRef.current?.expand();
   const closeAddClientSheet = () => addClientSheetRef.current?.close();
 
+  useEffect(() => {
+    fetchPatients();
+
+    async function fetchPatients() {
+      try {
+        setIsLoading(true);
+        const pharmacistUid = getAuth(app).currentUser?.uid;
+        if (!pharmacistUid) {
+          Toast.show({
+            type: "error",
+            text1: "User not authenticated. Please log in again.",
+          });
+          return;
+        }
+
+        const db = getFirestore(app);
+        const patientsQuery = query(
+          collection(db, "patients"),
+          where("pharmacistUid", "==", pharmacistUid)
+        );
+        const querySnapshot = await getDocs(patientsQuery);
+        const patientsList: PatientEntity[] = [];
+        querySnapshot.forEach((doc) => {
+          patientsList.push(doc.data() as PatientEntity);
+        });
+        setPatients(patientsList);
+      } catch (error) {
+        console.error("Error adding patient: ", error);
+        if (error instanceof FirebaseError && isOperationalError(error)) {
+          Toast.show({
+            type: "error",
+            text1: getFriendlyAuthMessage(error),
+          });
+        } else {
+          Toast.show({
+            type: "error",
+            text1: "An unknown error occurred. Please try again.",
+          });
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  }, []);
+
+  function onSelectPatient(patient: PatientEntity) {
+    // Handle patient selection (e.g., navigate to patient details)
+    console.log("Selected patient:", patient);
+  }
+
   return (
     <GestureHandlerRootView className="flex-1">
       <View className="flex-1 flex-col bg-teal-50 px-5 pt-6">
-        <View className="flex-1 bg-red-300 mb-4" />
+        <View className="flex-1 mb-4">
+          <PatientsList patients={patients} onPressPatient={onSelectPatient} />
+        </View>
 
         <View className="w-full flex-row justify-end mb-6">
           <TouchableOpacity
@@ -74,9 +142,37 @@ export function AddPatientForm() {
   const [age, setAge] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const { setIsLoading } = useApp();
+  const { patients, setPatients } = usePatients();
 
   const handleSubmit = async () => {
     try {
+      const pharmacistUid = getAuth(app).currentUser?.uid;
+
+      if (!pharmacistUid) {
+        Toast.show({
+          type: "error",
+          text1: "User not authenticated. Please log in again.",
+        });
+
+        return;
+      }
+
+      if (firstName.trim().length < 2 || lastName.trim().length < 2) {
+        Toast.show({
+          type: "error",
+          text1: "First and last names must be at least 2 characters long.",
+        });
+        return;
+      }
+
+      if (!validateEmail(email)) {
+        Toast.show({
+          type: "error",
+          text1: "Please enter a valid email address.",
+        });
+        return;
+      }
+
       setIsLoading(true);
       const payload = {
         firstName,
@@ -85,11 +181,21 @@ export function AddPatientForm() {
         gender,
         age: Number(age),
         uid: generatePushID(),
-        pharmacistUid: "",
+        pharmacistUid: pharmacistUid,
         phoneNumber,
       } as CreatePatientDto;
 
-      console.log(payload);
+      const uid = generatePushID();
+
+      const db = getFirestore(app);
+      await setDoc(doc(db, "patients", uid), payload);
+
+      setPatients([...patients, payload as PatientEntity]);
+
+      Toast.show({
+        type: "success",
+        text1: "Patient added successfully!",
+      });
     } catch (error) {
       console.error("Error adding patient: ", error);
       if (error instanceof FirebaseError && isOperationalError(error)) {
