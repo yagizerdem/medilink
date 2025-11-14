@@ -13,6 +13,8 @@ import { PharmacistLayout } from "./Activity/PharmacistArea/Layout/PharmasistLay
 import { DataManagement } from "./Activity/Common/DataManagement";
 import { About } from "./Activity/Common/About";
 
+import { Dashboard as PatientDashboard } from "./Activity/PatientArea/Activity/Dashboard";
+
 export const PharmacistStack = createNativeStackNavigator({
   initialRouteName: "Dashboard",
   screenOptions: { headerShown: false },
@@ -24,6 +26,14 @@ export const PharmacistStack = createNativeStackNavigator({
     Stock: PharmacistStock,
   },
   layout: PharmacistLayout,
+});
+
+export const PatientStack = createNativeStackNavigator({
+  initialRouteName: "Dashboard",
+  screenOptions: { headerShown: false },
+  screens: {
+    Dashboard: PatientDashboard,
+  },
 });
 
 const RootStack = createNativeStackNavigator({
@@ -39,6 +49,9 @@ const RootStack = createNativeStackNavigator({
     About: About,
     PharmacistApp: {
       screen: PharmacistStack,
+    },
+    PatientApp: {
+      screen: PatientStack,
     },
   },
 });

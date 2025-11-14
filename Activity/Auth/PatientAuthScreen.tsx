@@ -1,6 +1,20 @@
 import { useEffect, useState } from "react";
 import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { useNavigation } from "@react-navigation/native";
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { app } from "../../firebaseConfig";
+import { useApp } from "../../Provider/AppProvider";
+import Toast from "react-native-toast-message";
+import { doc, getFirestore, setDoc } from "firebase/firestore";
+import { UserType } from "../../enums/userType";
+import { FirebaseError } from "firebase/app";
+import { isOperationalError } from "../../util/isOperationalError";
+import { getFriendlyAuthMessage } from "../../util/getFriendlyMessage";
 
 enum PanelMode {
   LOGIN,
@@ -8,23 +22,111 @@ enum PanelMode {
 }
 
 export function PatientAuthScreen() {
+  const { setIsLoading } = useApp();
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("2yagiz004@gmail.com");
+  const [password, setPassword] = useState("123456");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [mode, setMode] = useState<PanelMode>(PanelMode.LOGIN);
+  const navigation = useNavigation();
+
+  const auth = getAuth(app);
 
   function switchPanel(mode_: PanelMode) {
     setMode(mode_);
   }
 
   useEffect(() => {
-    setEmail("");
-    setPassword("");
+    setEmail("2yagiz004@gmail.com");
+    setPassword("123456");
     setFirstName("");
     setLastName("");
   }, [mode]);
+
+  async function Register() {
+    try {
+      const firstName_ = firstName.trim();
+      const lastName_ = lastName.trim();
+
+      if (firstName_.length < 2 || lastName_.length < 2) {
+        Toast.show({
+          type: "error",
+          text1:
+            "Please enter a valid first and last name  (at least 2 characters each).",
+        });
+        return;
+      }
+
+      setIsLoading(true);
+      const response = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      const uid = response.user.uid;
+
+      const db = getFirestore(app);
+
+      await setDoc(doc(db, "profile", uid), {
+        uid,
+        firstName,
+        lastName,
+        email,
+        type: UserType.PATIENT,
+        createdAt: new Date(),
+      });
+
+      Toast.show({
+        type: "success",
+        text1: "Registration successful! You can now log in.",
+      });
+      switchPanel(PanelMode.LOGIN);
+    } catch (error) {
+      if (error instanceof FirebaseError && isOperationalError(error)) {
+        Toast.show({
+          type: "error",
+          text1: getFriendlyAuthMessage(error),
+        });
+      } else {
+        Toast.show({
+          type: "error",
+          text1: "An unknown error occurred. Please try again.",
+        });
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  async function Login() {
+    try {
+      setIsLoading(true);
+      const response = await signInWithEmailAndPassword(auth, email, password);
+
+      Toast.show({
+        type: "success",
+        text1: "Login successful!",
+      });
+
+      navigation.navigate("PatientApp" as never);
+    } catch (error) {
+      if (error instanceof FirebaseError && isOperationalError(error)) {
+        Toast.show({
+          type: "error",
+          text1: getFriendlyAuthMessage(error),
+        });
+      } else {
+        Toast.show({
+          type: "error",
+          text1: "An unknown error occurred. Please try again.",
+        });
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   return (
     <View className="flex-1 justify-center items-center bg-teal-50 px-5">
@@ -76,7 +178,10 @@ export function PatientAuthScreen() {
           </View>
 
           {/* Login button */}
-          <TouchableOpacity className="bg-teal-700 py-3 rounded-lg flex-row justify-center items-center active:opacity-90">
+          <TouchableOpacity
+            className="bg-teal-700 py-3 rounded-lg flex-row justify-center items-center active:opacity-90"
+            onPress={Login}
+          >
             <Ionicons name="log-in" color="white" size={18} />
             <Text className="text-white text-center font-semibold ml-2">
               Sign In
@@ -165,7 +270,10 @@ export function PatientAuthScreen() {
           </View>
 
           {/* Register button */}
-          <TouchableOpacity className="bg-teal-700 py-3 rounded-lg flex-row justify-center items-center active:opacity-90">
+          <TouchableOpacity
+            className="bg-teal-700 py-3 rounded-lg flex-row justify-center items-center active:opacity-90"
+            onPress={Register}
+          >
             <Ionicons name="person-add" color="white" size={18} />
             <Text className="text-white text-center font-semibold ml-2">
               Register
