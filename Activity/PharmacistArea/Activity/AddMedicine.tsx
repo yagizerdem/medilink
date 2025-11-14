@@ -96,6 +96,8 @@ function AddMedicineForm() {
     "empty_stomach"
   );
 
+  const [medicineName, setMedicineName] = useState("");
+
   const [times, setTimes] = useState<string[]>([]);
   const navigation = useNavigation();
 
@@ -143,6 +145,14 @@ function AddMedicineForm() {
         return;
       }
 
+      if (medicineName.trim() === "") {
+        Toast.show({
+          type: "error",
+          text1: "Please enter the medicine name.",
+        });
+        return;
+      }
+
       const auth = getAuth(app);
       const pharmacistUid = auth.currentUser?.uid;
       if (!pharmacistUid) {
@@ -163,6 +173,8 @@ function AddMedicineForm() {
         usage,
         barcode: barcode || "",
         times,
+        email,
+        medicineName,
       } as MedicineInfo;
 
       const docRef = await addDoc(
@@ -274,6 +286,28 @@ function AddMedicineForm() {
 
       {/* Response */}
       <DrugInfoView response={geminiResponse} />
+
+      {/* Medicine name input */}
+      <View className="mb-4">
+        <Text className="text-gray-600 text-sm mb-1">Medicine Name</Text>
+
+        <View className="flex-row items-center bg-[#e6f7f4] rounded-xl px-3 py-4 border border-teal-500">
+          <Ionicons
+            name="medical"
+            size={20}
+            color="#0f766e"
+            style={{ marginRight: 8 }}
+          />
+
+          <TextInput
+            value={medicineName}
+            onChangeText={(text) => setMedicineName(text)}
+            placeholder={"Enter medicine name"}
+            placeholderTextColor="#6b7280"
+            className="flex-1 text-[#0f766e] text-base"
+          />
+        </View>
+      </View>
 
       {/* Email input */}
       <View className="mb-4">

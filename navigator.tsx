@@ -15,6 +15,7 @@ import { About } from "./Activity/Common/About";
 
 import { Dashboard as PatientDashboard } from "./Activity/PatientArea/Activity/Dashboard";
 import { PatientLayout } from "./Activity/PatientArea/Layout/PatientLayout";
+import { MyMedicines } from "./Activity/PatientArea/Activity/MyMedicines";
 
 export const PharmacistStack = createNativeStackNavigator({
   initialRouteName: "Dashboard",
@@ -36,6 +37,7 @@ export const PatientStack = createNativeStackNavigator({
     Dashboard: PatientDashboard,
     Privacy: DataManagement,
     About: About,
+    MyMedicines: MyMedicines,
   },
   layout: PatientLayout,
 });
