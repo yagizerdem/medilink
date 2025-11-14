@@ -70,8 +70,13 @@ export function DataManagement() {
   }, [debouncedDataPermissions]);
 
   function goBack() {
-    //@ts-ignore
-    navigation.navigate("PharmacistApp" as never, { screen: "Settings" });
+    if (profile?.type === 1) {
+      //@ts-ignore
+      navigation.navigate("PatientApp" as never, { screen: "Dashboard" });
+    } else {
+      //@ts-ignore
+      navigation.navigate("PharmacistApp" as never, { screen: "Settings" });
+    }
   }
 
   async function deleteAccount() {

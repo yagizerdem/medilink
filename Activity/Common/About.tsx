@@ -1,13 +1,20 @@
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
+import { useApp } from "../../Provider/AppProvider";
 
 export function About() {
   const navigation = useNavigation();
+  const { profile } = useApp();
 
   function goBack() {
-    //@ts-ignore
-    navigation.navigate("PharmacistApp" as never, { screen: "Settings" });
+    if (profile?.type === 1) {
+      //@ts-ignore
+      navigation.navigate("PatientApp" as never, { screen: "Dashboard" });
+    } else {
+      //@ts-ignore
+      navigation.navigate("PharmacistApp" as never, { screen: "Settings" });
+    }
   }
 
   return (
