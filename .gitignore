@@ -46,4 +46,3 @@ yarn-error.*
 
 google-services.json
 GoogleService-Info.plist
-firebaseConfig.ts

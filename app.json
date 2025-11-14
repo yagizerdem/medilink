@@ -22,11 +22,17 @@
         "googleServicesFile": "./google-services.json"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.yagiz_erdem.medilink"
     },
     "web": {
       "favicon": "./assets/favicon.png",
       "bundler": "metro"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "42a6eb11-bc76-411b-8923-1b48a6528ff0"
+      }
     }
   }
 }
