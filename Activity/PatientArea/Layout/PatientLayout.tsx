@@ -176,7 +176,7 @@ export default function CustomDrawer({ navigation, closeDrawer }) {
         <TouchableOpacity
           className="flex-row items-center py-3"
           onPress={() => {
-            navigation.navigate("Diagnosis");
+            navigation.navigate("PatientApp", { screen: "Diagnoses" });
             closeDrawer();
           }}
         >
