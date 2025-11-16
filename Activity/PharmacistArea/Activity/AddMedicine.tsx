@@ -471,7 +471,7 @@ function AddMedicineForm() {
             fontWeight: "600",
           }}
         >
-          Kaydet
+          Save
         </Text>
       </TouchableOpacity>
     </View>
@@ -521,7 +521,7 @@ async function fetchDrugInfoFromNetwork(
   signal: AbortSignal
 ) {
   try {
-    const url = `https://us-central1-medilink-dev.cloudfunctions.net/drugInfo?name=${encodeURIComponent(medicineName)}`;
+    const url = `https://us-central1-medilink-dev.cloudfunctions.net/api/drug-info/${encodeURIComponent(medicineName)}`;
 
     const response = await fetch(url, { signal });
 
