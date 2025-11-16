@@ -16,12 +16,19 @@ import { getFriendlyAuthMessage } from "../../../util/getFriendlyMessage";
 import { getAuth } from "firebase/auth";
 import { app } from "../../../firebaseConfig";
 
-export function PatientLayout({ children }) {
+interface PatientLayoutProps {
+  children: React.ReactNode;
+}
+
+export function PatientLayout({ children }: PatientLayoutProps) {
   const navigation = useNavigation();
   const [open, setOpen] = useState(false);
   const slide = useRef(new Animated.Value(-280)).current;
 
-  function onAdkGeminiChatPress() {}
+  function onAdkGeminiChatPress() {
+    // @ts-ignore
+    navigation.navigate("PatientApp", { screen: "AskGemini" } as never);
+  }
 
   const toggleDrawer = () => {
     Animated.timing(slide, {
@@ -97,7 +104,7 @@ export function PatientLayout({ children }) {
             }}
           >
             <Text className="text-[#0f766e] font-medium text-base mr-2">
-              Bana soru sorabilirsin
+              Ask Gemini
             </Text>
 
             <View
